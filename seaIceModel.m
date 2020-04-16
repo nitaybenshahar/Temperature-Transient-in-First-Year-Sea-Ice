@@ -42,9 +42,9 @@ global num_of_points_ice num_of_points_snow delta_h_ice delta_h_snow time_offset
 
 %set up constants
 num_of_points_ice = 30;
-num_of_points_snow = 3;
-odeset('RelTol',1e-9, 'AbsTol', 1e-10);                                      % The error tolerance of the ODE solver
-final_t = 40.5*24*60*60;                                      % seconds
+num_of_points_snow = 10;
+odeset('RelTol',1e-9, 'AbsTol', 1e-10);                     % The error tolerance of the ODE solver
+final_t = 38*24*60*60;                                      % seconds
 time_offset = 16.5*24*60*60;                                  % seconds
 initial_ice_depth = -0.15;                                  % meters
 
@@ -54,7 +54,7 @@ initial_ice_depth = -0.15;                                  % meters
 %solver (ie odeset('RelTol', 1e-11); above)
 present_dt = 60*60;
 z_res_ice = 0.01;                                           % meters
-z_res_snow = 0.01;                                          % meters
+z_res_snow = 0.001;                                          % meters
 
 
 %Parameters
@@ -80,17 +80,17 @@ if(num_of_points_ice < 1 || num_of_points_snow < 1)
     error('Not enough calculation points to run the simulation. Must have at least one point for both ice and snow, even if no snow is present')
 end
 
+%h represents the re-parameterized depth variable in the code
 delta_h_ice = 1/(num_of_points_ice+1);
 delta_h_snow = 1/(num_of_points_snow+1);
 
-%set up initial conditions
 T_air = calcAirTemp(0);
 
-initial_var = ones(num_of_points_ice+num_of_points_snow+1, 1)*T_air;
-%[[Tsnow], [Tice], ice_depth]
+%set up initial conditions
+initial_var = ones(num_of_points_ice+num_of_points_snow+1, 1)*T_air; %[[Tsnow], [Tice], ice_depth]
 
 %Initial temperature profile is set to be the steady state solution to the
-%heat equation. Equation 24, 11 give us the ice/snow interface temperature.
+%heat equation assuming constat conductivity. Equation 10 gives us the ice/snow interface temperature.
 %We assume a constant thermal conductivity for this estimation.
 k_ice = kIce(T_freezing, calcSalinity(0));
 k_snow = kSnow(T_freezing);
@@ -153,6 +153,7 @@ for i=1:length(present_time)
     temp_profile_snow(i, 1:depth_index) = interp1(0:delta_h_snow*present_snow_thickness(i):present_snow_thickness(i), present_T_snow(i, :), depths);
 end
 
+%Update response variables
 model_output.time = present_time;
 model_output.z_ice = present_z_ice;
 model_output.z_snow = present_z_snow;

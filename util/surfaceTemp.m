@@ -1,6 +1,6 @@
 function surface_temp = surfaceTemp(snow_temp, ice_temp, snow_thickness, ice_depth, t)
 % A function to calculate the ice surface temperature between the interface of the snow
-% and the ice as detailed in equations 24, 11 of the report.
+% and the ice as detailed in equations 10 of the write up.
 %
 % snow_temp:        temperature of the snow at the point of calculation closest
 %                   to the snow/ice interface (ie at z=snow_thickness*delta_h_snow)

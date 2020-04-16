@@ -45,13 +45,6 @@ function deriv = iterateDEs(t, var)
     
     %iterate the snow then ice temperature profile according to equations 7
     %and 8
-    %Note a slight deviation from the write up. The thermal conductivity of
-    %sea ice/snow depends on the temperature and the salinity (i.e. the depth,
-    %the salinity is calculated via the user specified salinity profile). 
-    %Here to estimate the thermal conductivity in between sample points we 
-    %linearly interpolate on the temperature and salinity and evaluate the 
-    %thermal conductiviy at that point. In the write up the thermal conductivity 
-    %itself was interpolated.
     for i=1:length(temp_snow)
         h_snow = i/(length(temp_snow)+1);
         cp_z = cSnow(temp_snow(i)) * rhoSnow();
@@ -63,14 +56,19 @@ function deriv = iterateDEs(t, var)
         elseif i==length(temp_snow)
             k_snow_plus = kSnow(0.5*(temp_snow(i)+air_temp));
             k_snow_minus = kSnow(0.5*(temp_snow(i)+temp_snow(i-1)));
-            dTsnow_dt(i) = 1/(cp_z*snow_thickness^2*delta_h_snow^2)*(k_snow_plus*air_temp-(k_snow_plus+k_snow_minus)*temp_snow(i)+k_snow_minus*temp_snow(i-1)) + h_snow/snow_thickness *(air_temp-temp_snow(i-1))/(2*delta_h_snow)*snow_growth_rate;
+            dTsnow_dt(i) = alphaSnow(temp_snow(i))/(snow_thickness^2)*1/(delta_h_snow^2)*(air_temp-2*temp_snow(i)+temp_snow(i-1)) + h_snow/snow_thickness *(temp_snow(i)-temp_snow(i-1))/delta_h_snow*snow_growth_rate;
         else
-            k_snow_plus = kSnow(0.5*(temp_snow(i)+temp_snow(i+1)));
-            k_snow_minus = kSnow(0.5*(temp_snow(i)+temp_snow(i-1)));
-            dTsnow_dt(i) = 1/(cp_z*snow_thickness^2*delta_h_snow^2)*(k_snow_plus*temp_snow(i+1)-(k_snow_plus+k_snow_minus)*temp_snow(i)+k_snow_minus*temp_snow(i-1)) + h_snow/snow_thickness *(temp_snow(i+1)-temp_snow(i-1))/(2*delta_h_snow)*snow_growth_rate;
+            dTsnow_dt(i) = alphaSnow(temp_snow(i))/(snow_thickness^2)*1/(delta_h_snow^2)*(temp_snow(i-1)-2*temp_snow(i)+temp_snow(i+1)) + h_snow/snow_thickness *(temp_snow(i+1)-temp_snow(i-1))/(2*delta_h_snow)*snow_growth_rate;
         end
     end
     
+    %Note a slight deviation from the write up. The thermal conductivity of
+    %sea ice depends on the temperature and the salinity (i.e. the depth,
+    %the salinity is calculated via the user specified salinity profile). 
+    %Here to estimate the thermal conductivity in between sample points we 
+    %linearly interpolate on the temperature and salinity and evaluate the 
+    %thermal conductiviy at that point. In the write up the thermal conductivity 
+    %itself was interpolated.
     for i=1:length(temp_ice)
         h = i/(length(temp_ice)+1);
         cp_z = cIce(temp_ice(i), calcSalinity(h*ice_depth)) * rhoIce(temp_ice(i), calcSalinity(h*ice_depth), V_a);

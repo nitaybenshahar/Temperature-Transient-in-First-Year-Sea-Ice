@@ -7,8 +7,8 @@ function importUserData()
 %   - oceanFlux.csv is imported to ocean_matrix
 %
 % Zero snow is not allowed and is instead replaced with an
-% arbitrarily small number, 10^-10m here. For a changing snow profile this
-% should be set at 5*10^-4m to not cause trouble (found by trial and error)
+% arbitrarily small number, 10^-10m here. This could be adjusted if
+% numericals problems arise.
 
 
 global snow_matrix temp_matrix salinity_matrix ocean_matrix;
