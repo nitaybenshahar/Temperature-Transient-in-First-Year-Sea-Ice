@@ -9,15 +9,15 @@ function snow_growth_rate = snowGrowthRate(t)
 
 global time_offset snow_matrix
 
-snow_z_array = snow_matrix(:, 2);
-time_array = (snow_matrix(:, 1)-snow_matrix(1, 1))*60*60*24;    %to convert to seconds
-
-growth_rates = diff(snow_z_array)./(diff(time_array));
-
-if t+time_offset >= time_array(end-1)
-    snow_growth_rate = growth_rates(end);
+if (~isempty(snow_matrix))
+    snow_z_array = snow_matrix(:, 2);
+    time_array = (snow_matrix(:, 1)-snow_matrix(1, 1))*60*60*24;    %to convert to seconds
+    
+    growth_rates = diff(snow_z_array)./(diff(time_array));
+    growth_rates = [growth_rates; growth_rates(end)];
+    snow_growth_rate = interp1(time_array, growth_rates, time_offset+t, 'previous', 0);
 else
-    snow_growth_rate = interp1(time_array(1:end-1), growth_rates, time_offset+t, 'previous');
+    snow_growth_rate = zeros(length(t), 1);
 end
 
 end
