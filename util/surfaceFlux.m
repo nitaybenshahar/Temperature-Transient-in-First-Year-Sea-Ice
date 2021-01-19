@@ -7,7 +7,7 @@ function Q_s = surfaceFlux(t, T_s)
 az = transpose(calcZenith(t));
 
 %using Shine 1984 parameterization
-S = 1367;           %solar constant
+S = 1362;           %solar constant
 P = getAirPressure(t);
 e = 6.1115*(1.0003+4.18*10^(-6)*P).*exp(22.452*T_s./(272.55+T_s));
 

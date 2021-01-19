@@ -14,7 +14,7 @@ if isempty(location_matrix)
 else
     %constants used:
     % snow light absorption decay rate
-    v_snow = 1/100;
+    v_snow = 1/20;
     %upper ice light absorption decay rate
     v_1_ice = 1/20;
     %change over region

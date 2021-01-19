@@ -15,7 +15,7 @@ global num_of_points_ice num_of_points_snow delta_h_ice delta_h_snow time_offset
 
 %set up constants
 num_of_points_ice = 30;
-num_of_points_snow = 20;
+num_of_points_snow = 10;
 opts = odeset('RelTol',1e-6, 'AbsTol', 1e-4);                      % The error tolerance of the ODE solver
 final_t = 80*24*60*60;                                      % seconds
 time_offset = 0*24*60*60;                                   % seconds
@@ -27,10 +27,10 @@ initial_ice_depth = -0.15;                                  % meters
 %solver (ie odeset('RelTol', 1e-8); above)
 present_dt = 60*60;
 z_res_ice = 0.01;                                           % meters
-z_res_snow = 0.001;                                          % meters
+z_res_snow = 0.001;                                         % meters
 
 %for solar flux, need to define our time start
-start_date = datetime('5/01/1997');
+start_date = datetime(1997, 5, 1);
 
 
 %Parameters
