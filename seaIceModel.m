@@ -16,20 +16,20 @@ global num_of_points_ice num_of_points_snow delta_h_ice delta_h_snow time_offset
 %set up constants
 num_of_points_ice = 30;
 num_of_points_snow = 10;
-opts = odeset('RelTol',1e-6, 'AbsTol', 1e-4);                      % The error tolerance of the ODE solver
-final_t = 80*24*60*60;                                      % seconds
+opts = odeset('RelTol',1e-6, 'AbsTol', 1e-4);               % The error tolerance of the ODE solver
+final_t = 400*24*60*60;                                     % seconds
 time_offset = 0*24*60*60;                                   % seconds
 initial_ice_depth = -0.15;                                  % meters
 
-%The output of the model will be in the following resolutions
-%This does not change the accuracy of the model. To get more accurate
+%The output of the simulation will be in the following resolutions
+%This does not change the accuracy of the simulation. To get more accurate
 %models increase num_of_points_ice/snow and/or decrease the error tolerance of the
 %solver (ie odeset('RelTol', 1e-8); above)
 present_dt = 60*60;
 z_res_ice = 0.01;                                           % meters
 z_res_snow = 0.001;                                         % meters
 
-%for solar flux, need to define our time start
+%for solar heating, need to define our time start
 start_date = datetime(1997, 5, 1);
 
 
@@ -38,7 +38,7 @@ T_freezing = -1.8;                                         % Celsius
 V_a = 0;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Read in the user provided air temperature, snow depth and salinity
+% Read in the user provided data
 % profile data
 importUserData();
 
@@ -53,7 +53,7 @@ if(num_of_points_ice < 1 || num_of_points_snow < 1)
     error('Not enough calculation points to run the simulation. Must have at least one point for both ice and snow, even if no snow is present')
 end
 
-%h represents the re-parameterized depth variable in the code
+%h represents the re-parameterized depth variable
 delta_h_ice = 1/(num_of_points_ice+1);
 delta_h_snow = 1/(num_of_points_snow+1);
 

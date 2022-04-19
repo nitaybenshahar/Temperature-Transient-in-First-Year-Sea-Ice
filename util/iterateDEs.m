@@ -63,7 +63,6 @@ function deriv = iterateDEs(t, var)
     %calculate the solar heating at every required depth
     solar_heat = solarHeating(t, snow_thickness, -ice_depth, arr_h_snow*snow_thickness, -arr_h_ice*ice_depth, T_s);
     
-    
     %iterate the snow then ice temperature profile according to equations 7
     %and 8
     %Note a slight deviation from the write up. The thermal conductivity of
